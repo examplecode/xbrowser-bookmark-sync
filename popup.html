@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X浏览器书签同步</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 登录界面 -->
+  <div id="loginView" class="view">
+    <div class="header">
+      <h1>X浏览器书签同步</h1>
+      <p class="subtitle">本工具为X浏览器专用书签同步助手，首次使用请前往<a href="https://xbrowser.example.com" target="_blank">官网注册</a></p>
+    </div>
+    
+    <div class="login-form">
+      <div class="input-group">
+        <label for="username">用户名</label>
+        <input type="text" id="username" placeholder="请输入用户名" autocomplete="username">
+      </div>
+      
+      <div class="input-group">
+        <label for="password">密码</label>
+        <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password">
+      </div>
+      
+      <button id="loginBtn" class="primary-btn">登录</button>
+      
+      <div id="loginStatus" class="status-message"></div>
+    </div>
+  </div>
+
+  <!-- 主功能界面 -->
+  <div id="mainView" class="view hidden">
+    <div class="header">
+      <h1>X浏览器书签同步</h1>
+    </div>
+
+    <div class="user-info">
+      <img id="userAvatar" class="avatar" src="icons/default-avatar.png" alt="用户头像">
+      <div class="user-details">
+        <h2 id="userNickname">用户昵称</h2>
+        <p class="bookmark-count">本地书签: <span id="bookmarkCount">0</span> 个</p>
+      </div>
+    </div>
+
+    <div class="sync-actions">
+      <button id="uploadBtn" class="action-btn upload-btn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        同步到云端
+      </button>
+      
+      <button id="downloadBtn" class="action-btn download-btn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        从云端同步
+      </button>
+    </div>
+
+    <div id="syncStatus" class="status-message"></div>
+
+    <div class="footer">
+      <button id="logoutBtn" class="text-btn">退出登录</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

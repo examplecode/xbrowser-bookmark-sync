@@ -1,0 +1,22 @@
+{
+  "name": "x-browser-bookmark-sync",
+  "version": "1.0.0",
+  "description": "X浏览器专用书签同步Chrome扩展程序",
+  "main": "background.js",
+  "scripts": {
+    "dev": "node api-server.js",
+    "test": "echo \"扩展程序已创建，请按照INSTALL.md的说明安装到Chrome\""
+  },
+  "keywords": [
+    "chrome-extension",
+    "bookmark-sync",
+    "x-browser",
+    "cloud-sync"
+  ],
+  "author": "X Browser Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xbrowser/bookmark-sync-extension"
+  }
+}
