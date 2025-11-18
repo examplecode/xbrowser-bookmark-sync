@@ -281,7 +281,7 @@ const API_BASE_URL = 'http://localhost:3000';
 **步骤4：测试API**
 ```bash
 # 使用curl测试登录接口
-curl -X POST http://localhost:3000/auth/login \
+curl -X POST http://localhost:3000/api/auth \
   -H "Content-Type: application/json" \
   -d '{"username":"testuser","password":"password123"}'
 
@@ -527,21 +527,21 @@ chrome.bookmarks.getTree((bookmarks) => {
 服务器会自动记录所有请求：
 ```
 GET /
-POST /auth/login
-POST /bookmarks/upload
-GET /bookmarks/download
+POST /api/auth
+POST /api/bookmark_upload
+GET /api/bookmark_download
 ```
 
 ### 测试各个接口
 
 ```bash
 # 1. 测试登录
-curl -X POST http://localhost:3000/auth/login \
+curl -X POST http://localhost:3000/api/auth \
   -H "Content-Type: application/json" \
   -d '{"username":"testuser","password":"password123"}'
 
 # 2. 测试上传（需要先登录获取token）
-curl -X POST http://localhost:3000/bookmarks/upload \
+curl -X POST http://localhost:3000/api/bookmark_upload \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
@@ -550,7 +550,7 @@ curl -X POST http://localhost:3000/bookmarks/upload \
   }'
 
 # 3. 测试下载
-curl -X GET http://localhost:3000/bookmarks/download \
+curl -X GET http://localhost:3000/api/bookmark_download \
   -H "Authorization: Bearer YOUR_TOKEN"
 
 # 4. 测试用户信息

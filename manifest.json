@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "X浏览器书签同步助手",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "X浏览器专用书签同步工具，支持云端书签双向同步",
   "permissions": [
     "bookmarks",

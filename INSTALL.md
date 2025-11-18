@@ -76,7 +76,7 @@ API服务器需要提供以下接口：
 
 #### 登录接口
 \`\`\`
-POST /auth/login
+POST /api/auth
 Content-Type: application/json
 
 请求体:
@@ -97,7 +97,7 @@ Content-Type: application/json
 
 #### 上传书签
 \`\`\`
-POST /bookmarks/upload
+POST /api/bookmark_upload
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -117,7 +117,7 @@ Content-Type: application/json
 
 #### 下载书签
 \`\`\`
-GET /bookmarks/download
+GET /api/bookmark_download
 Authorization: Bearer {token}
 
 响应:

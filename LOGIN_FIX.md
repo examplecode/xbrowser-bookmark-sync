@@ -51,9 +51,9 @@ X浏览器书签同步API模拟服务器
   用户名: admin     密码: admin123
 
 可用接口：
-  POST   /auth/login          - 用户登录
-  POST   /bookmarks/upload    - 上传书签
-  GET    /bookmarks/download  - 下载书签
+  POST   /api/auth          - 用户登录
+  POST   /api/bookmark_upload    - 上传书签
+  GET    /api/bookmark_download  - 下载书签
   GET    /user/info           - 获取用户信息
 ============================================================
 ```
@@ -137,7 +137,7 @@ curl http://localhost:3000
 # 应该返回 HTML 内容
 
 # 测试登录接口
-curl -X POST http://localhost:3000/auth/login \
+curl -X POST http://localhost:3000/api/auth \
   -H "Content-Type: application/json" \
   -d '{"username":"testuser","password":"password123"}'
 
@@ -222,7 +222,7 @@ const API_BASE_URL = 'http://localhost:3001';
 **检查**：
 ```bash
 # 1. API 服务器应该输出请求日志
-POST /auth/login  # 应该看到这样的日志
+POST /api/auth  # 应该看到这样的日志
 
 # 2. 确认 manifest.json 包含 http 权限
 cat manifest.json | grep "http://"

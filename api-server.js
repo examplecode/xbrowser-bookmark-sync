@@ -221,23 +221,18 @@ const server = http.createServer((req, res) => {
         <tbody>
           <tr>
             <td><code>POST</code></td>
-            <td><code>/auth/login</code></td>
+            <td><code>/api/auth</code></td>
             <td>用户登录</td>
           </tr>
           <tr>
             <td><code>POST</code></td>
-            <td><code>/bookmarks/upload</code></td>
+            <td><code>/api/bookmark_upload</code></td>
             <td>上传书签到云端</td>
           </tr>
           <tr>
             <td><code>GET</code></td>
-            <td><code>/bookmarks/download</code></td>
+            <td><code>/api/bookmark_download</code></td>
             <td>从云端下载书签</td>
-          </tr>
-          <tr>
-            <td><code>GET</code></td>
-            <td><code>/user/info</code></td>
-            <td>获取用户信息</td>
           </tr>
         </tbody>
       </table>
@@ -274,7 +269,7 @@ curl -X POST http://localhost:3000/auth/login \\<br>
   }
   
   // 登录接口
-  if (pathname === '/auth/login' && req.method === 'POST') {
+  if (pathname === '/api/auth' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
@@ -310,7 +305,7 @@ curl -X POST http://localhost:3000/auth/login \\<br>
   }
   
   // 上传书签
-  if (pathname === '/bookmarks/upload' && req.method === 'POST') {
+  if (pathname === '/api/bookmark_upload' && req.method === 'POST') {
     const authHeader = req.headers.authorization;
     const token = authHeader?.replace('Bearer ', '');
     const userId = validateToken(token);
@@ -354,7 +349,7 @@ curl -X POST http://localhost:3000/auth/login \\<br>
   }
   
   // 下载书签
-  if (pathname === '/bookmarks/download' && req.method === 'GET') {
+  if (pathname === '/api/bookmark_download' && req.method === 'GET') {
     const authHeader = req.headers.authorization;
     const token = authHeader?.replace('Bearer ', '');
     const userId = validateToken(token);
@@ -382,42 +377,6 @@ curl -X POST http://localhost:3000/auth/login \\<br>
       success: true,
       bookmarks: bookmarkData.bookmarks,
       timestamp: bookmarkData.timestamp,
-    });
-    return;
-  }
-  
-  // 获取用户信息
-  if (pathname === '/user/info' && req.method === 'GET') {
-    const authHeader = req.headers.authorization;
-    const token = authHeader?.replace('Bearer ', '');
-    const userId = validateToken(token);
-    
-    if (!userId) {
-      sendJson(res, 401, {
-        success: false,
-        message: '未授权或token已过期',
-      });
-      return;
-    }
-    
-    const user = Array.from(users.values()).find(u => u.userId === userId);
-    
-    if (!user) {
-      sendJson(res, 404, {
-        success: false,
-        message: '用户不存在',
-      });
-      return;
-    }
-    
-    sendJson(res, 200, {
-      success: true,
-      userInfo: {
-        username: user.username,
-        nickname: user.nickname,
-        avatar: user.avatar,
-        userId: user.userId,
-      },
     });
     return;
   }
@@ -451,10 +410,9 @@ server.listen(PORT, () => {
   console.log('  用户名: admin     密码: admin123');
   console.log('');
   console.log('可用接口：');
-  console.log('  POST   /auth/login          - 用户登录');
-  console.log('  POST   /bookmarks/upload    - 上传书签');
-  console.log('  GET    /bookmarks/download  - 下载书签');
-  console.log('  GET    /user/info           - 获取用户信息');
+  console.log('  POST   /api/auth              - 用户登录');
+  console.log('  POST   /api/bookmark_upload   - 上传书签');
+  console.log('  GET    /api/bookmark_download - 下载书签');
   console.log('='.repeat(60));
 });
 

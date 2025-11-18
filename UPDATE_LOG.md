@@ -1,5 +1,46 @@
 # 更新日志
 
+## [1.0.4] - 2024-01-01
+
+### 🔄 接口重构
+
+#### 重构API接口路径
+- **变更**: 统一和规范化API接口命名
+- **影响**: 需要重新配置API服务器和扩展
+- **原因**: 
+  1. 原接口路径不规范，缺少统一前缀
+  2. 接口命名不一致（login vs upload/download）
+  3. 不符合RESTful API设计规范
+
+**接口变更对照表**:
+
+| 功能 | 旧接口 | 新接口 | 说明 |
+|------|--------|--------|------|
+| 用户登录 | `POST /auth/login` | `POST /api/auth` | 统一为/api前缀 |
+| 上传书签 | `POST /bookmarks/upload` | `POST /api/bookmark_upload` | 规范命名 |
+| 下载书签 | `GET /bookmarks/download` | `GET /api/bookmark_download` | 规范命名 |
+
+**修改文件**:
+- ✅ `popup.js` - 更新所有API调用
+- ✅ `api-server.js` - 更新所有接口路径
+- ✅ `API_DOCUMENTATION.md` - 更新接口文档
+- ✅ 所有相关文档（*.md, *.txt）
+
+**优势**:
+- ✅ 统一的 `/api` 前缀，便于路由管理
+- ✅ 更清晰的命名规范
+- ✅ 便于未来扩展
+- ✅ 符合RESTful最佳实践
+
+**向后兼容**: ❌ 不兼容（需要同时更新前后端）
+
+**升级说明**:
+1. 重新加载Chrome扩展（自动使用新接口）
+2. 重启API服务器（使用新的接口路径）
+3. 如有自定义后端，需要更新接口路径
+
+---
+
 ## [1.0.3] - 2024-01-01
 
 ### 🐛 重要Bug修复
@@ -243,9 +284,9 @@ if (pathname === '/' && req.method === 'GET') {
 │                                          │
 │  🔌 可用接口                             │
 │  ┌────────────────────────────────────┐ │
-│  │ POST  /auth/login     用户登录     │ │
-│  │ POST  /bookmarks/upload 上传书签   │ │
-│  │ GET   /bookmarks/download 下载书签 │ │
+│  │ POST  /api/auth     用户登录     │ │
+│  │ POST  /api/bookmark_upload 上传书签   │ │
+│  │ GET   /api/bookmark_download 下载书签 │ │
 │  │ GET   /user/info      获取用户信息 │ │
 │  └────────────────────────────────────┘ │
 │                                          │
@@ -274,7 +315,7 @@ if (pathname === '/' && req.method === 'GET') {
 4. **测试API**
    ```bash
    # 复制页面上的curl命令测试登录
-   curl -X POST http://localhost:3000/auth/login \
+   curl -X POST http://localhost:3000/api/auth \
      -H "Content-Type: application/json" \
      -d '{"username":"testuser","password":"password123"}'
    ```

@@ -76,7 +76,7 @@ const API_BASE_URL = 'https://api.xbrowser.example.com';
 ### API接口规范
 
 **登录接口：**
-- 路径：`POST /auth/login`
+- 路径：`POST /api/auth`
 - 请求体：
   \`\`\`json
   {
@@ -96,26 +96,245 @@ const API_BASE_URL = 'https://api.xbrowser.example.com';
   \`\`\`
 
 **上传书签：**
-- 路径：`POST /bookmarks/upload`
+- 路径：`POST /api/bookmark_upload`
 - 请求头：`Authorization: Bearer {token}`
 - 请求体：
   \`\`\`json
   {
-    "bookmarks": [...],
-    "timestamp": 1234567890
+    "bookmarks": [
+      {
+        "id": "1",
+        "title": "书签栏",
+        "children": [
+          {
+            "id": "101",
+            "title": "常用网站",
+            "children": [
+              {
+                "id": "1001",
+                "title": "Google",
+                "url": "https://www.google.com"
+              },
+              {
+                "id": "1002",
+                "title": "GitHub",
+                "url": "https://github.com"
+              }
+            ]
+          },
+          {
+            "id": "102",
+            "title": "百度",
+            "url": "https://www.baidu.com"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "title": "其他书签",
+        "children": [
+          {
+            "id": "201",
+            "title": "开发文档",
+            "children": [
+              {
+                "id": "2001",
+                "title": "MDN Web Docs",
+                "url": "https://developer.mozilla.org"
+              },
+              {
+                "id": "2002",
+                "title": "Chrome扩展文档",
+                "url": "https://developer.chrome.com/docs/extensions"
+              }
+            ]
+          },
+          {
+            "id": "202",
+            "title": "Stack Overflow",
+            "url": "https://stackoverflow.com"
+          }
+        ]
+      }
+    ],
+    "timestamp": 1700123456789
   }
   \`\`\`
+  
+  **书签数据结构说明：**
+  - `id`: 书签或文件夹的唯一标识符
+  - `title`: 书签或文件夹的标题
+  - `url`: 书签的URL地址（文件夹没有此字段）
+  - `children`: 子书签/文件夹数组（仅文件夹有此字段）
+  - `timestamp`: 同步时间戳（毫秒）
 
 **下载书签：**
-- 路径：`GET /bookmarks/download`
+- 路径：`GET /api/bookmark_download`
 - 请求头：`Authorization: Bearer {token}`
 - 响应：
   \`\`\`json
   {
     "success": true,
-    "bookmarks": [...]
+    "bookmarks": [...],
+    "timestamp": 1700123456789
   }
   \`\`\`
+
+## 测试命令
+
+### 1. 测试登录接口
+\`\`\`bash
+curl -X POST http://localhost:3000/api/auth \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "testuser",
+    "password": "password123"
+  }'
+\`\`\`
+
+**预期响应：**
+\`\`\`json
+{
+  "success": true,
+  "token": "token_user_001_1700123456789_abc123xyz",
+  "nickname": "测试用户",
+  "avatar": "https://ui-avatars.com/api/?name=Test+User&background=667eea&color=fff",
+  "userId": "user_001"
+}
+\`\`\`
+
+### 2. 测试上传书签接口
+\`\`\`bash
+# 先从登录响应中获取token，替换下面的YOUR_TOKEN
+curl -X POST http://localhost:3000/api/bookmark_upload \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "bookmarks": [
+      {
+        "id": "1",
+        "title": "书签栏",
+        "children": [
+          {
+            "id": "101",
+            "title": "Google",
+            "url": "https://www.google.com"
+          },
+          {
+            "id": "102",
+            "title": "GitHub",
+            "url": "https://github.com"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "title": "其他书签",
+        "children": [
+          {
+            "id": "201",
+            "title": "MDN",
+            "url": "https://developer.mozilla.org"
+          }
+        ]
+      }
+    ],
+    "timestamp": 1700123456789
+  }'
+\`\`\`
+
+**预期响应：**
+\`\`\`json
+{
+  "success": true,
+  "message": "书签上传成功",
+  "count": 3
+}
+\`\`\`
+
+### 3. 测试下载书签接口
+\`\`\`bash
+# 使用登录时获取的token
+curl -X GET http://localhost:3000/api/bookmark_download \
+  -H "Authorization: Bearer YOUR_TOKEN"
+\`\`\`
+
+**预期响应：**
+\`\`\`json
+{
+  "success": true,
+  "bookmarks": [
+    {
+      "id": "1",
+      "title": "书签栏",
+      "children": [...]
+    },
+    {
+      "id": "2",
+      "title": "其他书签",
+      "children": [...]
+    }
+  ],
+  "timestamp": 1700123456789
+}
+\`\`\`
+
+### 完整测试流程脚本
+\`\`\`bash
+#!/bin/bash
+
+echo "=== 1. 测试登录接口 ==="
+LOGIN_RESPONSE=$(curl -s -X POST http://localhost:3000/api/auth \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"password123"}')
+
+echo "$LOGIN_RESPONSE" | jq '.'
+
+# 提取token
+TOKEN=$(echo "$LOGIN_RESPONSE" | jq -r '.token')
+echo -e "\n获取到的Token: $TOKEN\n"
+
+echo "=== 2. 测试上传书签接口 ==="
+UPLOAD_RESPONSE=$(curl -s -X POST http://localhost:3000/api/bookmark_upload \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{
+    "bookmarks": [
+      {
+        "id": "1",
+        "title": "书签栏",
+        "children": [
+          {"id": "101", "title": "Google", "url": "https://www.google.com"},
+          {"id": "102", "title": "GitHub", "url": "https://github.com"}
+        ]
+      },
+      {
+        "id": "2",
+        "title": "其他书签",
+        "children": [
+          {"id": "201", "title": "MDN", "url": "https://developer.mozilla.org"}
+        ]
+      }
+    ],
+    "timestamp": 1700123456789
+  }')
+
+echo "$UPLOAD_RESPONSE" | jq '.'
+
+echo -e "\n=== 3. 测试下载书签接口 ==="
+DOWNLOAD_RESPONSE=$(curl -s -X GET http://localhost:3000/api/bookmark_download \
+  -H "Authorization: Bearer $TOKEN")
+
+echo "$DOWNLOAD_RESPONSE" | jq '.'
+
+echo -e "\n=== 测试完成 ==="
+\`\`\`
+
+**使用说明：**
+1. 将上述脚本保存为 `test-api.sh`
+2. 确保已安装 `jq` 工具（用于格式化JSON输出）：`brew install jq`
+3. 赋予执行权限：`chmod +x test-api.sh`
+4. 运行测试：`./test-api.sh`
 
 ## 技术栈
 

@@ -21,7 +21,7 @@ X浏览器书签同步助手 - 后端API接口规范
 
 #### 请求
 
-**接口地址**: `POST /auth/login`
+**接口地址**: `POST /api/auth`
 
 **请求头**:
 \`\`\`http
@@ -38,7 +38,7 @@ Content-Type: application/json
 
 **请求示例**:
 \`\`\`bash
-curl -X POST https://api.xbrowser.example.com/auth/login \\
+curl -X POST https://api.xbrowser.example.com/api/auth \\
   -H "Content-Type: application/json" \\
   -d '{
     "username": "testuser",
@@ -85,7 +85,7 @@ curl -X POST https://api.xbrowser.example.com/auth/login \\
 
 #### 请求
 
-**接口地址**: `POST /bookmarks/upload`
+**接口地址**: `POST /api/bookmark_upload`
 
 **请求头**:
 \`\`\`http
@@ -129,7 +129,7 @@ Authorization: Bearer {token}
 
 **请求示例**:
 \`\`\`bash
-curl -X POST https://api.xbrowser.example.com/bookmarks/upload \\
+curl -X POST https://api.xbrowser.example.com/api/bookmark_upload \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \\
   -d '{
@@ -183,7 +183,7 @@ curl -X POST https://api.xbrowser.example.com/bookmarks/upload \\
 
 #### 请求
 
-**接口地址**: `GET /bookmarks/download`
+**接口地址**: `GET /api/bookmark_download`
 
 **请求头**:
 \`\`\`http
@@ -192,7 +192,7 @@ Authorization: Bearer {token}
 
 **请求示例**:
 \`\`\`bash
-curl -X GET https://api.xbrowser.example.com/bookmarks/download \\
+curl -X GET https://api.xbrowser.example.com/api/bookmark_download \\
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 \`\`\`
 
@@ -365,7 +365,7 @@ const timestamp = Date.now();  // 1634567890000
 \`\`\`javascript
 // 登录
 async function login(username, password) {
-  const response = await fetch('https://api.example.com/auth/login', {
+  const response = await fetch('https://api.example.com/api/auth', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -384,7 +384,7 @@ async function login(username, password) {
 
 // 上传书签
 async function uploadBookmarks(token, bookmarks) {
-  const response = await fetch('https://api.example.com/bookmarks/upload', {
+  const response = await fetch('https://api.example.com/api/bookmark_upload', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -401,7 +401,7 @@ async function uploadBookmarks(token, bookmarks) {
 
 // 下载书签
 async function downloadBookmarks(token) {
-  const response = await fetch('https://api.example.com/bookmarks/download', {
+  const response = await fetch('https://api.example.com/api/bookmark_download', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -451,7 +451,7 @@ function authenticateToken(req, res, next) {
 }
 
 // 登录接口
-app.post('/auth/login', (req, res) => {
+app.post('/api/auth', (req, res) => {
   const { username, password } = req.body;
   
   // 验证用户名密码（这里需要实际的数据库查询）
@@ -473,7 +473,7 @@ app.post('/auth/login', (req, res) => {
 });
 
 // 上传书签
-app.post('/bookmarks/upload', authenticateToken, (req, res) => {
+app.post('/api/bookmark_upload', authenticateToken, (req, res) => {
   const { bookmarks, timestamp } = req.body;
   const userId = req.user.userId;
   
@@ -488,7 +488,7 @@ app.post('/bookmarks/upload', authenticateToken, (req, res) => {
 });
 
 // 下载书签
-app.get('/bookmarks/download', authenticateToken, (req, res) => {
+app.get('/api/bookmark_download', authenticateToken, (req, res) => {
   const userId = req.user.userId;
   
   // 从数据库获取
@@ -514,36 +514,36 @@ app.listen(3000);
 
 1. **登录**
    - Method: POST
-   - URL: http://localhost:3000/auth/login
+   - URL: http://localhost:3000/api/auth
    - Body: `{"username":"testuser","password":"password123"}`
 
 2. **上传书签**
    - Method: POST
-   - URL: http://localhost:3000/bookmarks/upload
+   - URL: http://localhost:3000/api/bookmark_upload
    - Headers: `Authorization: Bearer {token}`
    - Body: `{"bookmarks":[...],"timestamp":1634567890000}`
 
 3. **下载书签**
    - Method: GET
-   - URL: http://localhost:3000/bookmarks/download
+   - URL: http://localhost:3000/api/bookmark_download
    - Headers: `Authorization: Bearer {token}`
 
 ### cURL测试
 
 \`\`\`bash
 # 登录
-curl -X POST http://localhost:3000/auth/login \\
+curl -X POST http://localhost:3000/api/auth \\
   -H "Content-Type: application/json" \\
   -d '{"username":"testuser","password":"password123"}'
 
 # 上传（替换YOUR_TOKEN）
-curl -X POST http://localhost:3000/bookmarks/upload \\
+curl -X POST http://localhost:3000/api/bookmark_upload \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
   -d '{"bookmarks":[],"timestamp":1634567890000}'
 
 # 下载（替换YOUR_TOKEN）
-curl -X GET http://localhost:3000/bookmarks/download \\
+curl -X GET http://localhost:3000/api/bookmark_download \\
   -H "Authorization: Bearer YOUR_TOKEN"
 \`\`\`
 

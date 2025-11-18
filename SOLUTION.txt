@@ -27,9 +27,9 @@ API服务器的根路径（/）没有配置处理逻辑，直接返回404错误�
    │    ├─ 用户名: testuser  密码: password123
    │    └─ 用户名: admin     密码: admin123
    ├─ 🔌 可用API接口列表（表格展示）
-   │    ├─ POST  /auth/login
-   │    ├─ POST  /bookmarks/upload
-   │    ├─ GET   /bookmarks/download
+   │    ├─ POST  /api/auth
+   │    ├─ POST  /api/bookmark_upload
+   │    ├─ GET   /api/bookmark_download
    │    └─ GET   /user/info
    ├─ 💡 使用说明
    └─ 🔧 curl测试命令示例

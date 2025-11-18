@@ -151,14 +151,14 @@ X-Browser-Bookmark-Sync/
 
 ### 登录接口
 \`\`\`
-POST /auth/login
+POST /api/auth
 请求：{ username, password }
 响应：{ success, token, nickname, avatar, userId }
 \`\`\`
 
 ### 上传书签
 \`\`\`
-POST /bookmarks/upload
+POST /api/bookmark_upload
 请求头：Authorization: Bearer {token}
 请求：{ bookmarks, timestamp }
 响应：{ success, message, count }
@@ -166,7 +166,7 @@ POST /bookmarks/upload
 
 ### 下载书签
 \`\`\`
-GET /bookmarks/download
+GET /api/bookmark_download
 请求头：Authorization: Bearer {token}
 响应：{ success, bookmarks, timestamp }
 \`\`\`

@@ -4,7 +4,7 @@ let apiToken = null;
 
 // API配置 - 开发环境使用本地测试服务器，生产环境替换为真实的X浏览器API
 // 开发测试：使用本地服务器
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://192.168.110.39:3000';
 // 生产环境：取消下面的注释并注释上面的行
 // const API_BASE_URL = 'https://api.xbrowser.example.com';
 
@@ -95,7 +95,7 @@ async function handleLogin(username, password) {
     showStatus(loginStatus, '正在登录...', 'loading');
     
     // 调用登录API
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ uploadBtn.addEventListener('click', async () => {
       : [];
     
     // 上传到服务器
-    const response = await fetch(`${API_BASE_URL}/bookmarks/upload`, {
+    const response = await fetch(`${API_BASE_URL}/api/bookmark_upload`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ downloadBtn.addEventListener('click', async () => {
     showStatus(syncStatus, '正在从云端同步...', 'loading');
     
     // 从服务器获取书签
-    const response = await fetch(`${API_BASE_URL}/bookmarks/download`, {
+    const response = await fetch(`${API_BASE_URL}/api/bookmark_download`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${apiToken}`,
