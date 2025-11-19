@@ -5,42 +5,45 @@
 }
 
 body {
-  width: 380px;
-  min-height: 450px;
+  width: 400px;
+  min-height: 500px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ffffff;
   color: #333;
 }
 
 .view {
-  padding: 24px;
+  padding: 0;
 }
 
 .view.hidden {
   display: none;
 }
 
+/* ========== 登录界面 ========== */
 .header {
   text-align: center;
   margin-bottom: 30px;
-  color: white;
+  padding: 24px 24px 0;
+  color: #333;
 }
 
 .header h1 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   margin-bottom: 8px;
+  color: #1a1a1a;
 }
 
 .subtitle {
   font-size: 13px;
   line-height: 1.6;
-  opacity: 0.95;
+  color: #666;
   padding: 0 10px;
 }
 
 .subtitle a {
-  color: #fff;
+  color: #667eea;
   text-decoration: underline;
   font-weight: 500;
 }
@@ -52,9 +55,7 @@ body {
 /* 登录表单 */
 .login-form {
   background: white;
-  padding: 28px 24px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 0 24px 24px;
 }
 
 .input-group {
@@ -87,7 +88,7 @@ body {
 .primary-btn {
   width: 100%;
   padding: 13px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #1a1a1a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -99,12 +100,11 @@ body {
 }
 
 .primary-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: #333;
 }
 
 .primary-btn:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .primary-btn:disabled {
@@ -113,68 +113,80 @@ body {
   transform: none;
 }
 
-/* 用户信息 */
-.user-info {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
+/* ========== 主界面 ========== */
+#mainView {
+  padding: 32px 0 0;
+}
+
+/* 用户信息区域 */
+.user-profile {
+  text-align: center;
+  padding: 0 32px 32px;
 }
 
 .avatar {
-  width: 56px;
-  height: 56px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #f0f0f0;
+  margin-bottom: 16px;
+  border: 3px solid #f5f5f5;
 }
 
-.user-details {
-  flex: 1;
-}
-
-.user-details h2 {
-  font-size: 18px;
+.username {
+  font-size: 20px;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 6px;
+  color: #1a1a1a;
+  margin-bottom: 12px;
 }
 
-.bookmark-count {
-  font-size: 14px;
-  color: #777;
+.bookmark-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 15px;
+  color: #666;
 }
 
-.bookmark-count span {
+.bookmark-icon {
+  width: 18px;
+  height: 18px;
+  color: #999;
+}
+
+.bookmark-info span {
   font-weight: 600;
-  color: #667eea;
+  color: #1a1a1a;
 }
 
-/* 同步操作 */
-.sync-actions {
+/* 分割线 */
+.divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 0 32px;
+}
+
+/* 同步按钮区域 */
+.sync-section {
+  padding: 32px 32px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 20px;
 }
 
-.action-btn {
+.sync-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 14px 20px;
+  padding: 16px 24px;
   border: none;
-  border-radius: 10px;
-  font-size: 15px;
+  border-radius: 12px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
-  color: white;
+  transition: all 0.2s;
 }
 
 .btn-icon {
@@ -182,30 +194,32 @@ body {
   height: 20px;
 }
 
-.upload-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.sync-btn.primary {
+  background: #1a1a1a;
+  color: white;
 }
 
-.upload-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+.sync-btn.primary:hover {
+  background: #333;
 }
 
-.download-btn {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+.sync-btn.secondary {
+  background: white;
+  color: #1a1a1a;
+  border: 2px solid #e0e0e0;
 }
 
-.download-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+.sync-btn.secondary:hover {
+  background: #f8f8f8;
+  border-color: #d0d0d0;
 }
 
-.action-btn:active {
-  transform: translateY(0);
+.sync-btn:active {
+  transform: scale(0.98);
 }
 
-.action-btn:disabled {
-  opacity: 0.6;
+.sync-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
@@ -213,73 +227,75 @@ body {
 /* 状态消息 */
 .status-message {
   text-align: center;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 10px 32px;
   font-size: 13px;
-  margin-top: 12px;
   min-height: 20px;
+  color: #666;
 }
 
 .status-message.success {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  color: #10b981;
 }
 
 .status-message.error {
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  color: #ef4444;
 }
 
 .status-message.info {
-  background: #d1ecf1;
-  color: #0c5460;
-  border: 1px solid #bee5eb;
+  color: #3b82f6;
 }
 
 .status-message.loading {
-  background: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeeba;
+  color: #f59e0b;
 }
 
 #loginView .status-message {
-  background: transparent;
-  border: none;
-  color: #333;
+  color: #666;
   font-weight: 500;
 }
 
 #loginView .status-message.success {
-  color: #155724;
+  color: #10b981;
 }
 
 #loginView .status-message.error {
-  color: #721c24;
+  color: #ef4444;
 }
 
-/* 页脚 */
-.footer {
+/* 退出登录区域 */
+.logout-section {
+  padding: 32px 32px 40px;
   text-align: center;
-  margin-top: 16px;
 }
 
-.text-btn {
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: none;
   border: none;
-  color: white;
-  font-size: 13px;
+  color: #666;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 6px;
-  transition: all 0.3s;
-  opacity: 0.85;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.2s;
 }
 
-.text-btn:hover {
-  opacity: 1;
-  background: rgba(255, 255, 255, 0.1);
+.logout-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.logout-btn:hover {
+  background: #f5f5f5;
+  color: #1a1a1a;
+}
+
+.logout-btn:active {
+  transform: scale(0.98);
 }
 
 /* 加载动画 */
@@ -293,7 +309,7 @@ body {
   width: 14px;
   height: 14px;
   border: 2px solid rgba(0, 0, 0, 0.1);
-  border-top-color: #667eea;
+  border-top-color: #1a1a1a;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-right: 8px;
