@@ -1,0 +1,91 @@
+{
+  "extName": {
+    "message": "X Browser Bookmark Sync"
+  },
+  "extDescription": {
+    "message": "Bookmark sync tool for X Browser, supports two-way cloud bookmark synchronization"
+  },
+  "appTitle": {
+    "message": "X Browser Bookmark Sync"
+  },
+  "loginSubtitle": {
+    "message": "This tool is designed for X Browser bookmark synchronization. If you don't have an account, please "
+  },
+  "registerLink": {
+    "message": "download X Browser to register"
+  },
+  "registerLinkUrl": {
+    "message": "https://play.google.com/store/apps/details?id=com.xbrowser.play"
+  },
+  "username": {
+    "message": "Username"
+  },
+  "usernamePlaceholder": {
+    "message": "Enter username"
+  },
+  "password": {
+    "message": "Password"
+  },
+  "passwordPlaceholder": {
+    "message": "Enter password"
+  },
+  "loginButton": {
+    "message": "Login"
+  },
+  "bookmarkCount": {
+    "message": "bookmarks"
+  },
+  "syncToCloud": {
+    "message": "Sync to Cloud"
+  },
+  "syncFromCloud": {
+    "message": "Sync from Cloud"
+  },
+  "logout": {
+    "message": "Logout"
+  },
+  "loggingIn": {
+    "message": "Logging in..."
+  },
+  "loginSuccess": {
+    "message": "Login successful!"
+  },
+  "loginFailed": {
+    "message": "Login failed, please check your username and password"
+  },
+  "inputRequired": {
+    "message": "Please enter username and password"
+  },
+  "syncingToCloud": {
+    "message": "Syncing to cloud..."
+  },
+  "syncingFromCloud": {
+    "message": "Syncing from cloud..."
+  },
+  "syncSuccess": {
+    "message": "Sync successful!"
+  },
+  "syncSuccessWithCount": {
+    "message": "Sync successful! Uploaded $COUNT$ bookmarks",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "bookmarksUpdated": {
+    "message": "Bookmarks updated"
+  },
+  "syncFailed": {
+    "message": "Sync failed, please check network connection"
+  },
+  "tokenExpired": {
+    "message": "Session expired, please login again"
+  },
+  "logoutConfirm": {
+    "message": "Are you sure you want to logout?"
+  },
+  "networkError": {
+    "message": "Network error, please try again"
+  }
+}

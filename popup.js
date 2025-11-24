@@ -2,11 +2,8 @@
 let currentUser = null;
 let apiToken = null;
 
-// API配置 - 开发环境使用本地测试服务器，生产环境替换为真实的X浏览器API
-// 开发测试：使用本地服务器
-const API_BASE_URL = 'http://192.168.110.39:3000';
-// 生产环境：取消下面的注释并注释上面的行
-// const API_BASE_URL = 'https://api.xbrowser.example.com';
+// API配置 - 从 config.js 获取
+const API_BASE_URL = getApiBaseUrl();
 
 // DOM元素
 const loginView = document.getElementById('loginView');
@@ -25,9 +22,59 @@ const logoutBtn = document.getElementById('logoutBtn');
 
 // 初始化
 document.addEventListener('DOMContentLoaded', async () => {
+  initI18n();
   await checkLoginStatus();
   updateBookmarkCount();
 });
+
+// 初始化国际化
+function initI18n() {
+  // 处理带 data-i18n 属性的元素
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const i18nValue = element.getAttribute('data-i18n');
+    
+    // 处理复合属性格式: [attr1]key1;[attr2]key2;textKey
+    // 例如: [href]registerLinkUrl;registerLink
+    if (i18nValue.includes('[') || i18nValue.includes(';')) {
+      const parts = i18nValue.split(';');
+      
+      parts.forEach(part => {
+        part = part.trim();
+        
+        // 匹配 [attribute]key 格式
+        const attrMatch = part.match(/^\[(\w+)\](.+)$/);
+        if (attrMatch) {
+          const [, attr, key] = attrMatch;
+          const message = chrome.i18n.getMessage(key);
+          if (message) {
+            element.setAttribute(attr, message);
+          }
+        } else {
+          // 普通文本键
+          const message = chrome.i18n.getMessage(part);
+          if (message) {
+            element.textContent = message;
+          }
+        }
+      });
+    } else {
+      // 简单的文本替换
+      const message = chrome.i18n.getMessage(i18nValue);
+      if (message) {
+        element.textContent = message;
+      }
+    }
+  });
+  
+  // 处理 placeholder
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+    const key = element.getAttribute('data-i18n-placeholder');
+    const message = chrome.i18n.getMessage(key);
+    if (message) {
+      element.placeholder = message;
+    }
+  });
+}
 
 // 检查登录状态
 async function checkLoginStatus() {
@@ -74,7 +121,7 @@ loginBtn.addEventListener('click', async () => {
   const password = passwordInput.value.trim();
   
   if (!username || !password) {
-    showStatus(loginStatus, '请输入用户名和密码', 'error');
+    showStatus(loginStatus, chrome.i18n.getMessage('inputRequired'), 'error');
     return;
   }
   
@@ -92,7 +139,7 @@ passwordInput.addEventListener('keypress', (e) => {
 async function handleLogin(username, password) {
   try {
     loginBtn.disabled = true;
-    showStatus(loginStatus, '正在登录...', 'loading');
+    showStatus(loginStatus, chrome.i18n.getMessage('loggingIn'), 'loading');
     
     // 调用登录API
     const response = await fetch(`${API_BASE_URL}/api/auth`, {
@@ -104,7 +151,7 @@ async function handleLogin(username, password) {
     });
     
     if (!response.ok) {
-      throw new Error('登录失败，请检查用户名和密码');
+      throw new Error(chrome.i18n.getMessage('loginFailed'));
     }
     
     const data = await response.json();
@@ -124,7 +171,7 @@ async function handleLogin(username, password) {
         userInfo: currentUser,
       });
       
-      showStatus(loginStatus, '登录成功！', 'success');
+      showStatus(loginStatus, chrome.i18n.getMessage('loginSuccess'), 'success');
       
       // 延迟显示主界面
       setTimeout(() => {
@@ -135,11 +182,11 @@ async function handleLogin(username, password) {
         loginStatus.className = 'status-message';
       }, 1000);
     } else {
-      throw new Error(data.message || '登录失败');
+      throw new Error(data.message || chrome.i18n.getMessage('loginFailed'));
     }
   } catch (error) {
     console.error('登录错误:', error);
-    showStatus(loginStatus, error.message || '登录失败，请重试', 'error');
+    showStatus(loginStatus, error.message || chrome.i18n.getMessage('loginFailed'), 'error');
   } finally {
     loginBtn.disabled = false;
   }
@@ -176,7 +223,7 @@ uploadBtn.addEventListener('click', async () => {
   try {
     uploadBtn.disabled = true;
     downloadBtn.disabled = true;
-    showStatus(syncStatus, '正在同步到云端...', 'loading');
+    showStatus(syncStatus, chrome.i18n.getMessage('syncingToCloud'), 'loading');
     
     // 获取所有书签
     const bookmarks = await chrome.bookmarks.getTree();
@@ -200,27 +247,28 @@ uploadBtn.addEventListener('click', async () => {
     
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('登录已过期，请重新登录');
+        throw new Error(chrome.i18n.getMessage('tokenExpired'));
       }
-      throw new Error('同步失败，请重试');
+      throw new Error(chrome.i18n.getMessage('syncFailed'));
     }
     
     const data = await response.json();
     
     if (data.success) {
-      showStatus(syncStatus, `同步成功！已上传 ${countBookmarks(bookmarks)} 个书签`, 'success');
+      const count = countBookmarks(bookmarks);
+      showStatus(syncStatus, chrome.i18n.getMessage('syncSuccessWithCount', [count.toString()]), 'success');
       setTimeout(() => {
         syncStatus.textContent = '';
         syncStatus.className = 'status-message';
       }, 3000);
     } else {
-      throw new Error(data.message || '同步失败');
+      throw new Error(data.message || chrome.i18n.getMessage('syncFailed'));
     }
   } catch (error) {
     console.error('上传书签失败:', error);
-    showStatus(syncStatus, error.message || '同步失败，请检查网络连接', 'error');
+    showStatus(syncStatus, error.message || chrome.i18n.getMessage('syncFailed'), 'error');
     
-    if (error.message.includes('登录已过期')) {
+    if (error.message.includes(chrome.i18n.getMessage('tokenExpired'))) {
       setTimeout(() => {
         handleLogout();
       }, 2000);
@@ -236,7 +284,7 @@ downloadBtn.addEventListener('click', async () => {
   try {
     downloadBtn.disabled = true;
     uploadBtn.disabled = true;
-    showStatus(syncStatus, '正在从云端同步...', 'loading');
+    showStatus(syncStatus, chrome.i18n.getMessage('syncingFromCloud'), 'loading');
     
     // 从服务器获取书签
     const response = await fetch(`${API_BASE_URL}/api/bookmark_download`, {
@@ -248,9 +296,9 @@ downloadBtn.addEventListener('click', async () => {
     
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('登录已过期，请重新登录');
+        throw new Error(chrome.i18n.getMessage('tokenExpired'));
       }
-      throw new Error('同步失败，请重试');
+      throw new Error(chrome.i18n.getMessage('syncFailed'));
     }
     
     const data = await response.json();
@@ -264,7 +312,7 @@ downloadBtn.addEventListener('click', async () => {
       // data.bookmarks 应该是一个数组，包含这些主要文件夹
       await restoreBookmarksToRoot(data.bookmarks);
       
-      showStatus(syncStatus, '同步成功！书签已更新', 'success');
+      showStatus(syncStatus, chrome.i18n.getMessage('syncSuccess') + '！' + chrome.i18n.getMessage('bookmarksUpdated'), 'success');
       await updateBookmarkCount();
       
       setTimeout(() => {
@@ -272,13 +320,13 @@ downloadBtn.addEventListener('click', async () => {
         syncStatus.className = 'status-message';
       }, 3000);
     } else {
-      throw new Error(data.message || '同步失败');
+      throw new Error(data.message || chrome.i18n.getMessage('syncFailed'));
     }
   } catch (error) {
     console.error('下载书签失败:', error);
-    showStatus(syncStatus, error.message || '同步失败，请检查网络连接', 'error');
+    showStatus(syncStatus, error.message || chrome.i18n.getMessage('syncFailed'), 'error');
     
-    if (error.message.includes('登录已过期')) {
+    if (error.message.includes(chrome.i18n.getMessage('tokenExpired'))) {
       setTimeout(() => {
         handleLogout();
       }, 2000);
@@ -343,7 +391,9 @@ async function restoreBookmarksToRoot(bookmarkData) {
         if (item.url) {
           // 这是一个书签，检查书签栏中是否已存在
           const existingChildren = await chrome.bookmarks.getChildren(bookmarkBar);
-          const exists = existingChildren.find(child => child.url === item.url);
+          const exists = existingChildren.find(
+            child => decodeURIComponent(child.url || '') === decodeURIComponent(item.url || '')
+          );
           
           if (!exists) {
             await chrome.bookmarks.create({
@@ -383,7 +433,9 @@ async function restoreBookmarks(bookmarkData, parentId = '1') {
     try {
       if (item.url) {
         // 检查书签是否已存在（基于URL）
-        const exists = existingChildren.find(child => child.url === item.url);
+        const exists = existingChildren.find(
+          child => decodeURIComponent(child.url || '') === decodeURIComponent(item.url || '')
+        );
         
         if (!exists) {
           // 书签不存在，创建新书签
@@ -423,7 +475,7 @@ async function restoreBookmarks(bookmarkData, parentId = '1') {
 
 // 退出登录
 logoutBtn.addEventListener('click', () => {
-  if (confirm('确定要退出登录吗？')) {
+  if (confirm(chrome.i18n.getMessage('logoutConfirm'))) {
     handleLogout();
   }
 });

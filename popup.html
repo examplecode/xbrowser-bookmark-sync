@@ -5,27 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>X浏览器书签同步</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
 </head>
 <body>
   <!-- 登录界面 -->
   <div id="loginView" class="view">
     <div class="header">
-      <h1>X浏览器书签同步</h1>
-      <p class="subtitle">本工具为X浏览器专用书签同步助手，如没有账户，请前往<a href="https://www.xbext.com" target="_blank">官网</a>或<a href="https://www.xbext.com/download/xbrowser-release.apk">下载</a>X浏览器注册</p>
+      <h1 data-i18n="appTitle">X浏览器书签同步</h1>
+      <p class="subtitle">
+<span data-i18n="loginSubtitle">本工具为X浏览器专用书签同步助手，如没有账户请</span><a href="https://www.xbext.com" target="_blank" data-i18n="[href]registerLinkUrl;registerLink">下载X浏览器注册</a>
+      </p>
     </div>
     
     <div class="login-form">
       <div class="input-group">
-        <label for="username">用户名</label>
-        <input type="text" id="username" placeholder="请输入用户名" autocomplete="username">
+        <label for="username" data-i18n="username">用户名</label>
+        <input type="text" id="username" data-i18n-placeholder="usernamePlaceholder" autocomplete="username">
       </div>
       
       <div class="input-group">
-        <label for="password">密码</label>
-        <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password">
+        <label for="password" data-i18n="password">密码</label>
+        <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" autocomplete="current-password">
       </div>
       
-      <button id="loginBtn" class="primary-btn">登录</button>
+      <button id="loginBtn" class="primary-btn" data-i18n="loginButton">登录</button>
       
       <div id="loginStatus" class="status-message"></div>
     </div>
@@ -34,13 +37,13 @@
   <!-- 主功能界面 -->
   <div id="mainView" class="view hidden">
     <div class="user-profile">
-      <img id="userAvatar" class="avatar" src="icons/default-avatar.png" alt="用户头像">
-      <h2 id="userNickname" class="username">用户昵称</h2>
+      <img id="userAvatar" class="avatar" src="icons/default-avatar.png" alt="Avatar">
+      <h2 id="userNickname" class="username">User</h2>
       <div class="bookmark-info">
         <svg class="bookmark-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
         </svg>
-        <span id="bookmarkCount">0</span> 个书签
+        <span id="bookmarkCount">0</span> <span data-i18n="bookmarkCount">个书签</span>
       </div>
     </div>
 
@@ -51,14 +54,14 @@
         <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
           <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
         </svg>
-        同步到云端
+        <span data-i18n="syncToCloud">同步到云端</span>
       </button>
       
       <button id="downloadBtn" class="sync-btn secondary">
         <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
           <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
         </svg>
-        从云端同步
+        <span data-i18n="syncFromCloud">从云端同步</span>
       </button>
     </div>
 
@@ -73,7 +76,7 @@
           <polyline points="16 17 21 12 16 7"></polyline>
           <line x1="21" y1="12" x2="9" y2="12"></line>
         </svg>
-        退出登录
+        <span data-i18n="logout">退出登录</span>
       </button>
     </div>
   </div>
