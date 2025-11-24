@@ -6,7 +6,7 @@
 
 极简设计，只提供最基本的书签同步功能，登录X浏览器账户后即可使用。如果你有多个PC浏览器也可以使用X浏览器的账户在多个PC浏览器设备上同步书签。
 
-![alt text](/images/xbrowser-bookmark-sync.pngimage.png)
+![alt text](/https://github.com/examplecode/xbrowser-bookmark-sync/blob/main/images/xbrowser-bookmark-sync.png)
 
 ## 安装说明
 
