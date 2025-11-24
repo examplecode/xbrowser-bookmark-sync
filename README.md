@@ -1,340 +1,35 @@
 # X浏览器书签同步助手
 
-一个专为X浏览器设计的Chrome扩展程序，支持本地书签与云端的双向同步。
+一个专为X浏览器设计的Chrome扩展程序，可以运行在任何支持Chrome扩展的浏览器上，支持本地书签与云端的双向同步。
 
 ## 功能特性
 
-### 1. 用户登录
-- 简洁的登录界面，支持用户名/密码登录
-- 实时显示登录状态（正在登录/成功/失败）
-- 安全的token存储机制
-- 登录信息持久化
+极简设计，只提供最基本的书签同步功能，登录X浏览器账户后即可使用。如果你有多个PC浏览器也可以使用X浏览器的账户在多个PC浏览器设备上同步书签。
 
-### 2. 书签管理
-- 显示本地书签总数统计
-- 一键同步到云端
-- 一键从云端同步
-- 支持书签文件夹结构
-- 实时同步状态提示
-
-### 3. 用户体验
-- 现代简约的设计风格
-- 渐变色主题
-- 流畅的动画效果
-- 清晰的操作反馈
-- 网络异常处理
+![alt text](/images/xbrowser-bookmark-sync.pngimage.png)
 
 ## 安装说明
 
 ### 开发模式安装
 
-1. 打开Chrome浏览器，进入扩展程序管理页面
+1. 下载本项目项目到本地
+
+```bash
+  git clone https://github.com/your-repo/xbrowser-bookmark-sync.git
+```
+
+2. 打开Chrome浏览器，进入扩展程序管理页面
    - 方法1：在地址栏输入 `chrome://extensions/`
    - 方法2：菜单 → 更多工具 → 扩展程序
 
-2. 开启右上角的"开发者模式"
+3. 开启右上角的"开发者模式"
 
-3. 点击"加载已解压的扩展程序"
+4. 点击"加载已解压的扩展程序"
 
-4. 选择本项目所在文件夹
+5. 选择本项目所在文件夹
 
-5. 扩展程序安装完成，点击工具栏图标即可使用
+6. 扩展程序安装完成，点击工具栏图标即可使用
 
-## 使用指南
-
-### 首次使用
-
-1. 点击扩展程序图标打开弹窗
-2. 如果未注册，点击"官网注册"链接前往注册
-3. 输入用户名和密码
-4. 点击"登录"按钮
-
-### 同步书签
-
-**同步到云端：**
-- 点击"同步到云端"按钮
-- 等待上传完成
-- 查看同步结果
-
-**从云端同步：**
-- 点击"从云端同步"按钮
-- 等待下载完成
-- 本地书签将更新
-
-### 退出登录
-
-点击底部的"退出登录"按钮，确认后即可退出。
-
-## API配置
-
-扩展程序需要连接X浏览器的云端API，请在 `popup.js` 中修改API地址：
-
-\`\`\`javascript
-const API_BASE_URL = 'https://api.xbrowser.example.com';
-\`\`\`
-
-### API接口规范
-
-**登录接口：**
-- 路径：`POST /api/auth`
-- 请求体：
-  \`\`\`json
-  {
-    "username": "用户名",
-    "password": "密码"
-  }
-  \`\`\`
-- 响应：
-  \`\`\`json
-  {
-    "success": true,
-    "token": "访问令牌",
-    "nickname": "昵称",
-    "avatar": "头像URL",
-    "userId": "用户ID"
-  }
-  \`\`\`
-
-**上传书签：**
-- 路径：`POST /api/bookmark_upload`
-- 请求头：`Authorization: Bearer {token}`
-- 请求体：
-  \`\`\`json
-  {
-    "bookmarks": [
-      {
-        "id": "1",
-        "title": "书签栏",
-        "children": [
-          {
-            "id": "101",
-            "title": "常用网站",
-            "children": [
-              {
-                "id": "1001",
-                "title": "Google",
-                "url": "https://www.google.com"
-              },
-              {
-                "id": "1002",
-                "title": "GitHub",
-                "url": "https://github.com"
-              }
-            ]
-          },
-          {
-            "id": "102",
-            "title": "百度",
-            "url": "https://www.baidu.com"
-          }
-        ]
-      },
-      {
-        "id": "2",
-        "title": "其他书签",
-        "children": [
-          {
-            "id": "201",
-            "title": "开发文档",
-            "children": [
-              {
-                "id": "2001",
-                "title": "MDN Web Docs",
-                "url": "https://developer.mozilla.org"
-              },
-              {
-                "id": "2002",
-                "title": "Chrome扩展文档",
-                "url": "https://developer.chrome.com/docs/extensions"
-              }
-            ]
-          },
-          {
-            "id": "202",
-            "title": "Stack Overflow",
-            "url": "https://stackoverflow.com"
-          }
-        ]
-      }
-    ],
-    "timestamp": 1700123456789
-  }
-  \`\`\`
-  
-  **书签数据结构说明：**
-  - `id`: 书签或文件夹的唯一标识符
-  - `title`: 书签或文件夹的标题
-  - `url`: 书签的URL地址（文件夹没有此字段）
-  - `children`: 子书签/文件夹数组（仅文件夹有此字段）
-  - `timestamp`: 同步时间戳（毫秒）
-
-**下载书签：**
-- 路径：`GET /api/bookmark_download`
-- 请求头：`Authorization: Bearer {token}`
-- 响应：
-  \`\`\`json
-  {
-    "success": true,
-    "bookmarks": [...],
-    "timestamp": 1700123456789
-  }
-  \`\`\`
-
-## 测试命令
-
-### 1. 测试登录接口
-\`\`\`bash
-curl -X POST http://localhost:3000/api/auth \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "testuser",
-    "password": "password123"
-  }'
-\`\`\`
-
-**预期响应：**
-\`\`\`json
-{
-  "success": true,
-  "token": "token_user_001_1700123456789_abc123xyz",
-  "nickname": "测试用户",
-  "avatar": "https://ui-avatars.com/api/?name=Test+User&background=667eea&color=fff",
-  "userId": "user_001"
-}
-\`\`\`
-
-### 2. 测试上传书签接口
-\`\`\`bash
-# 先从登录响应中获取token，替换下面的YOUR_TOKEN
-curl -X POST http://localhost:3000/api/bookmark_upload \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -d '{
-    "bookmarks": [
-      {
-        "id": "1",
-        "title": "书签栏",
-        "children": [
-          {
-            "id": "101",
-            "title": "Google",
-            "url": "https://www.google.com"
-          },
-          {
-            "id": "102",
-            "title": "GitHub",
-            "url": "https://github.com"
-          }
-        ]
-      },
-      {
-        "id": "2",
-        "title": "其他书签",
-        "children": [
-          {
-            "id": "201",
-            "title": "MDN",
-            "url": "https://developer.mozilla.org"
-          }
-        ]
-      }
-    ],
-    "timestamp": 1700123456789
-  }'
-\`\`\`
-
-**预期响应：**
-\`\`\`json
-{
-  "success": true,
-  "message": "书签上传成功",
-  "count": 3
-}
-\`\`\`
-
-### 3. 测试下载书签接口
-\`\`\`bash
-# 使用登录时获取的token
-curl -X GET http://localhost:3000/api/bookmark_download \
-  -H "Authorization: Bearer YOUR_TOKEN"
-\`\`\`
-
-**预期响应：**
-\`\`\`json
-{
-  "success": true,
-  "bookmarks": [
-    {
-      "id": "1",
-      "title": "书签栏",
-      "children": [...]
-    },
-    {
-      "id": "2",
-      "title": "其他书签",
-      "children": [...]
-    }
-  ],
-  "timestamp": 1700123456789
-}
-\`\`\`
-
-### 完整测试流程脚本
-\`\`\`bash
-#!/bin/bash
-
-echo "=== 1. 测试登录接口 ==="
-LOGIN_RESPONSE=$(curl -s -X POST http://localhost:3000/api/auth \
-  -H "Content-Type: application/json" \
-  -d '{"username":"testuser","password":"password123"}')
-
-echo "$LOGIN_RESPONSE" | jq '.'
-
-# 提取token
-TOKEN=$(echo "$LOGIN_RESPONSE" | jq -r '.token')
-echo -e "\n获取到的Token: $TOKEN\n"
-
-echo "=== 2. 测试上传书签接口 ==="
-UPLOAD_RESPONSE=$(curl -s -X POST http://localhost:3000/api/bookmark_upload \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{
-    "bookmarks": [
-      {
-        "id": "1",
-        "title": "书签栏",
-        "children": [
-          {"id": "101", "title": "Google", "url": "https://www.google.com"},
-          {"id": "102", "title": "GitHub", "url": "https://github.com"}
-        ]
-      },
-      {
-        "id": "2",
-        "title": "其他书签",
-        "children": [
-          {"id": "201", "title": "MDN", "url": "https://developer.mozilla.org"}
-        ]
-      }
-    ],
-    "timestamp": 1700123456789
-  }')
-
-echo "$UPLOAD_RESPONSE" | jq '.'
-
-echo -e "\n=== 3. 测试下载书签接口 ==="
-DOWNLOAD_RESPONSE=$(curl -s -X GET http://localhost:3000/api/bookmark_download \
-  -H "Authorization: Bearer $TOKEN")
-
-echo "$DOWNLOAD_RESPONSE" | jq '.'
-
-echo -e "\n=== 测试完成 ==="
-\`\`\`
-
-**使用说明：**
-1. 将上述脚本保存为 `test-api.sh`
-2. 确保已安装 `jq` 工具（用于格式化JSON输出）：`brew install jq`
-3. 赋予执行权限：`chmod +x test-api.sh`
-4. 运行测试：`./test-api.sh`
 
 ## 技术栈
 
@@ -367,13 +62,7 @@ echo -e "\n=== 测试完成 ==="
 - `storage`: 存储用户登录信息
 - `host_permissions`: 访问云端API
 
-## 注意事项
 
-1. **API地址配置**：首次使用前需配置正确的API地址
-2. **网络连接**：同步功能需要稳定的网络连接
-3. **数据安全**：密码传输建议使用HTTPS
-4. **书签备份**：建议在首次同步前备份本地书签
-5. **合并策略**：从云端同步时，可根据需求选择覆盖或合并策略
 
 ## 开发说明
 
@@ -383,12 +72,7 @@ echo -e "\n=== 测试完成 ==="
 2. 查看Console中的日志信息
 3. 修改代码后点击刷新按钮重新加载扩展
 
-### 打包发布
 
-1. 准备图标文件（16x16、48x48、128x128）
-2. 在扩展程序页面点击"打包扩展程序"
-3. 选择项目文件夹
-4. 生成.crx文件用于分发
 
 ## 常见问题
 
