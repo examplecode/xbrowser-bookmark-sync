@@ -6,7 +6,7 @@
 
 极简设计，只提供最基本的书签同步功能，登录X浏览器账户后即可使用。如果你有多个PC浏览器也可以使用X浏览器的账户在多个PC浏览器设备上同步书签。
 
-![alt text](https://github.com/examplecode/xbrowser-bookmark-sync/blob/main/images/xbrowser-bookmark-sync.png)
+![alt text](assets/images/xbrowser-bookmark-sync.png)
 
 ## 安装说明
 
@@ -42,8 +42,7 @@
 - CSS3 渐变与动画
 
 ## 文件结构
-
-\`\`\`
+```
 ├── manifest.json          # 扩展程序配置文件
 ├── popup.html             # 弹窗页面
 ├── popup.js               # 主要逻辑
@@ -55,7 +54,7 @@
 │   ├── icon128.png
 │   └── default-avatar.png
 └── README.md              # 说明文档
-\`\`\`
+```
 
 ## 权限说明
 
