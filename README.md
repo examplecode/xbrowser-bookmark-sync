@@ -15,8 +15,9 @@
 1. 下载本项目项目到本地
 
 ```bash
-  git clone https://github.com/your-repo/xbrowser-bookmark-sync.git
+  git clone https://github.com/examplecode/xbrowser-bookmark-sync.git
 ```
+或者直接下载压缩包 [xbrowser-bookmark-sync.zip](https://www.xbext.com/download/xbrowser-bookmark-sync.zip) 释放到本地目录。
 
 2. 打开Chrome浏览器，进入扩展程序管理页面
    - 方法1：在地址栏输入 `chrome://extensions/`
@@ -63,7 +64,6 @@
 - `host_permissions`: 访问云端API
 
 
-
 ## 开发说明
 
 ### 调试
@@ -73,20 +73,6 @@
 3. 修改代码后点击刷新按钮重新加载扩展
 
 
-
-## 常见问题
-
-**Q: 登录失败怎么办？**
-A: 请检查用户名密码是否正确，并确保API地址配置正确。
-
-**Q: 同步失败怎么办？**
-A: 请检查网络连接，确认token是否过期，必要时重新登录。
-
-**Q: 书签数量不准确？**
-A: 扩展会自动统计所有书签（包括文件夹中的），如有问题请刷新扩展。
-
-**Q: 如何修改同步策略？**
-A: 在popup.js中的`downloadBtn`事件处理函数中，可以修改是否清空现有书签。
 
 ## 许可证
 
