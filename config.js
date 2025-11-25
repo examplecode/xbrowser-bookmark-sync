@@ -10,7 +10,7 @@
 // 环境配置
 const ENV = {
   // 开发模式开关：true=开发环境，false=生产环境
-  isDevelopment: false,
+  isDevelopment: true,
   
   // 开发环境API地址
   development: {

@@ -392,7 +392,7 @@ async function restoreBookmarksToRoot(bookmarkData) {
           // 这是一个书签，检查书签栏中是否已存在
           const existingChildren = await chrome.bookmarks.getChildren(bookmarkBar);
           const exists = existingChildren.find(
-            child => decodeURIComponent(child.url || '') === decodeURIComponent(item.url || '')
+            child => child.url && normalizeUrl(child.url) === normalizeUrl(item.url)
           );
           
           if (!exists) {
@@ -424,6 +424,74 @@ async function restoreBookmarksToRoot(bookmarkData) {
   }
 }
 
+// URL标准化函数：使用URL API进行严格规范化
+function normalizeUrl(url) {
+  if (!url) return '';
+  
+  try {
+    // 1. 首先尝试多次解码，直到无法再解码
+    let decodedUrl = url;
+    let previousUrl = '';
+    let maxIterations = 5; // 防止无限循环
+    let iterations = 0;
+    
+    while (decodedUrl !== previousUrl && iterations < maxIterations) {
+      previousUrl = decodedUrl;
+      try {
+        const newUrl = decodeURIComponent(decodedUrl);
+        // 只有当解码后确实有变化时才继续
+        if (newUrl !== decodedUrl) {
+          decodedUrl = newUrl;
+        } else {
+          break;
+        }
+      } catch (e) {
+        // 无法继续解码，使用当前结果
+        break;
+      }
+      iterations++;
+    }
+    
+    // 2. 尝试使用URL API规范化
+    try {
+      const urlObj = new URL(decodedUrl);
+      
+      // 3. 规范化处理
+      // - 移除尾部斜杠（除非是根路径）
+      let pathname = urlObj.pathname;
+      if (pathname.length > 1 && pathname.endsWith('/')) {
+        pathname = pathname.slice(0, -1);
+      }
+      
+      // - 移除默认端口
+      let port = urlObj.port;
+      if ((urlObj.protocol === 'http:' && port === '80') ||
+          (urlObj.protocol === 'https:' && port === '443')) {
+        port = '';
+      }
+      
+      // - 构建规范化URL（保留hash，因为单页应用可能需要）
+      const normalizedUrl = 
+        urlObj.protocol + '//' + 
+        urlObj.hostname.toLowerCase() + 
+        (port ? ':' + port : '') +
+        pathname +
+        urlObj.search +
+        urlObj.hash;
+      
+      return normalizedUrl.toLowerCase().trim();
+    } catch (urlError) {
+      // URL API解析失败，说明URL格式无效
+      // 回退到字符串比较（完全解码后的URL）
+      return decodedUrl.toLowerCase().trim();
+    }
+  } catch (error) {
+    // 如果所有处理都失败，返回原始URL的小写形式
+    console.warn('URL规范化失败:', url, error);
+    return url.toLowerCase().trim();
+  }
+}
+
 // 恢复书签（智能合并模式）
 async function restoreBookmarks(bookmarkData, parentId = '1') {
   // 获取当前父节点下的所有子节点
@@ -432,9 +500,9 @@ async function restoreBookmarks(bookmarkData, parentId = '1') {
   for (const item of bookmarkData) {
     try {
       if (item.url) {
-        // 检查书签是否已存在（基于URL）
+        // 检查书签是否已存在（基于URL规范化比较）
         const exists = existingChildren.find(
-          child => decodeURIComponent(child.url || '') === decodeURIComponent(item.url || '')
+          child => child.url && normalizeUrl(child.url) === normalizeUrl(item.url)
         );
         
         if (!exists) {

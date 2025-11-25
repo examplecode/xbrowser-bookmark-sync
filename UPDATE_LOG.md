@@ -1,5 +1,51 @@
 # 更新日志
 
+## [1.0.8] - 2024-11-25
+
+### 🔧 URL规范化算法重大改进
+
+#### 增强URL比较和去重能力
+- **新增**: 多重URL解码支持（最多5次迭代）
+- **新增**: 使用浏览器原生URL API进行规范化
+- **新增**: 无效URL优雅降级处理
+- **改进**: 移除尾部斜杠（`/page/` → `/page`）
+- **改进**: 移除HTTP/HTTPS默认端口（`:80`, `:443`）
+- **改进**: 统一大小写处理
+- **修复**: 多重编码URL导致的重复书签（`%252F` → `/`）
+- **修复**: 包含非法字符的Punycode域名处理
+
+**修改文件**:
+- ✅ `popup.js` - 重写 `normalizeUrl()` 函数
+- ✅ `URL_NORMALIZATION.md` - 新增技术文档
+
+**测试用例**:
+```javascript
+// ✅ 相同URL的不同编码
+"https://example.com/path%20with%20space" === "https://example.com/path with space"
+
+// ✅ 尾部斜杠统一
+"https://example.com/page/" === "https://example.com/page"
+
+// ✅ 大小写统一
+"https://Example.COM/Path" === "https://example.com/path"
+
+// ✅ 多重编码处理
+"https://example.com/%252Ftest" === "https://example.com/%2Ftest"
+
+// ✅ 无效URL正确区分
+"http://xn--(*)-qm4eqxka..." !== "http://xn--(*)-rh6bmrga..."
+```
+
+**优势**:
+- ✅ 更准确的书签去重
+- ✅ 处理各种边界情况
+- ✅ 优雅的错误处理
+- ✅ O(n) 时间复杂度
+
+**向后兼容**: ✅ 完全兼容（只是比较更智能）
+
+---
+
 ## [1.0.4] - 2024-01-01
 
 ### 🔄 接口重构
