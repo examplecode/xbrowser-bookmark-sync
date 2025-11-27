@@ -1,18 +1,18 @@
 {
   "extName": {
-    "message": "X Browser Bookmark Sync"
+    "message": "XBrowser Bookmark Sync"
   },
   "extDescription": {
-    "message": "Bookmark sync tool for X Browser, supports two-way cloud bookmark synchronization"
+    "message": "Bookmark sync tool for XBrowser, supports two-way cloud bookmark synchronization"
   },
   "appTitle": {
-    "message": "X Browser Bookmark Sync"
+    "message": "XBrowser Bookmark Sync"
   },
   "loginSubtitle": {
-    "message": "This tool is designed for X Browser bookmark synchronization. If you don't have an account, please "
+    "message": "This tool is designed for XBrowser bookmark synchronization. If you don't have an account, please "
   },
   "registerLink": {
-    "message": "download X Browser to register"
+    "message": "download XBrowser to register"
   },
   "registerLinkUrl": {
     "message": "https://play.google.com/store/apps/details?id=com.xbrowser.play"

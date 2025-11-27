@@ -24,26 +24,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-// 定期检查token有效性（可选）
-// 注意：需要在manifest.json中添加 "alarms" 权限
-if (chrome.alarms) {
-  chrome.alarms.create('checkTokenValidity', {
-    periodInMinutes: 60, // 每小时检查一次
-  }).catch(error => {
-    console.error('创建定时器失败:', error);
-  });
-
-  chrome.alarms.onAlarm.addListener(async (alarm) => {
-    if (alarm.name === 'checkTokenValidity') {
-      try {
-        const result = await chrome.storage.local.get(['apiToken']);
-        if (result.apiToken) {
-          // 这里可以添加验证token的逻辑
-          console.log('检查token有效性');
-        }
-      } catch (error) {
-        console.error('检查token失败:', error);
-      }
-    }
-  });
-}

@@ -1,13 +1,12 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "__MSG_extDescription__",
   "default_locale": "zh_CN",
   "permissions": [
     "bookmarks",
-    "storage",
-    "alarms"
+    "storage"
   ],
   "host_permissions": [
     "https://*/*",
