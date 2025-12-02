@@ -6,9 +6,35 @@
 
 极简设计，只提供最基本的书签同步功能，登录X浏览器账户后即可使用。如果你有多个PC浏览器也可以使用X浏览器的账户在多个PC浏览器设备上同步书签。
 
-![alt text](assets/images/xbrowser-bookmark-sync.png)
+![alt text](assets/images/chrome-with-xbrowser-bookmark-sync.png)
 
 ## 安装说明
+
+
+### 扩展商店安装
+
+- Chrome浏览器扩展商店安装地址：https://chrome.google.com/webstore/detail/dbccejmmnkoaaffbliocemfkhabmemhe
+
+- Edge浏览器扩展商店安装地址：https://microsoftedge.microsoft.com/addons/detail/xbrowser-bookmark-sync/gdbkdcohpokcfaheiojfamnmfoniaeca
+
+
+!!! info  求好评
+    麻烦应用商店安装的同学们，觉得这个扩展对你有用的话给个5星好评，先谢了 ：）
+
+
+
+### 从crx文件安装
+
+1. 直接下载[xbrowser-bookmark-sync.crx](https://www.xbext.com/download/xbrowser-bookmark-sync.crx)文件到你本地目录。
+
+
+2. 打开Chrome浏览器，进入扩展程序管理页面
+   - 方法1：在地址栏输入 `chrome://extensions/`
+   - 方法2：菜单 → 更多工具 → 扩展程序
+
+3. 开启右上角的"开发者模式"
+
+4. 从文件管理器拖拽crx文件到扩展程序页面即可完成安装
 
 ### 开发模式安装
 
