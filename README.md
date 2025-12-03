@@ -1,6 +1,6 @@
 # X浏览器书签同步助手
 
-
+[English](README-en.md) | [中文](README.md)
 
 一个专为X浏览器设计的Chrome扩展程序，可以运行在任何支持Chrome扩展的浏览器上，支持本地书签与云端的双向同步。
 
