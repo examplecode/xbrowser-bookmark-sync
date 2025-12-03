@@ -1,5 +1,7 @@
 # X浏览器书签同步助手
 
+
+
 一个专为X浏览器设计的Chrome扩展程序，可以运行在任何支持Chrome扩展的浏览器上，支持本地书签与云端的双向同步。
 
 ## 功能特性
@@ -18,9 +20,9 @@
 - Edge浏览器扩展商店安装地址：https://microsoftedge.microsoft.com/addons/detail/xbrowser-bookmark-sync/gdbkdcohpokcfaheiojfamnmfoniaeca
 
 
-!!! info  求好评
-    麻烦应用商店安装的同学们，觉得这个扩展对你有用的话给个5星好评，先谢了 ：）
+> 觉得这个扩展对你有用的话，请顺便给个好评，先谢了 ：）
 
+   
 
 
 ### 从crx文件安装
