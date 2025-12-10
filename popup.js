@@ -2,6 +2,9 @@
 let currentUser = null;
 let apiToken = null;
 
+// 使用兼容性 API（支持 Chrome 和 Firefox）
+const chromeAPI = typeof browserAPI !== 'undefined' ? browserAPI : chrome;
+
 // API配置 - 从 config.js 获取
 const API_BASE_URL = getApiBaseUrl();
 
@@ -45,13 +48,13 @@ function initI18n() {
         const attrMatch = part.match(/^\[(\w+)\](.+)$/);
         if (attrMatch) {
           const [, attr, key] = attrMatch;
-          const message = chrome.i18n.getMessage(key);
+          const message = chromeAPI.i18n.getMessage(key);
           if (message) {
             element.setAttribute(attr, message);
           }
         } else {
           // 普通文本键
-          const message = chrome.i18n.getMessage(part);
+          const message = chromeAPI.i18n.getMessage(part);
           if (message) {
             element.textContent = message;
           }
@@ -59,7 +62,7 @@ function initI18n() {
       });
     } else {
       // 简单的文本替换
-      const message = chrome.i18n.getMessage(i18nValue);
+      const message = chromeAPI.i18n.getMessage(i18nValue);
       if (message) {
         element.textContent = message;
       }
@@ -69,7 +72,7 @@ function initI18n() {
   // 处理 placeholder
   document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
     const key = element.getAttribute('data-i18n-placeholder');
-    const message = chrome.i18n.getMessage(key);
+    const message = chromeAPI.i18n.getMessage(key);
     if (message) {
       element.placeholder = message;
     }
@@ -79,7 +82,7 @@ function initI18n() {
 // 检查登录状态
 async function checkLoginStatus() {
   try {
-    const result = await chrome.storage.local.get(['apiToken', 'userInfo']);
+    const result = await chromeAPI.storage.local.get(['apiToken', 'userInfo']);
     
     if (result.apiToken && result.userInfo) {
       apiToken = result.apiToken;
@@ -121,7 +124,7 @@ loginBtn.addEventListener('click', async () => {
   const password = passwordInput.value.trim();
   
   if (!username || !password) {
-    showStatus(loginStatus, chrome.i18n.getMessage('inputRequired'), 'error');
+    showStatus(loginStatus, chromeAPI.i18n.getMessage('inputRequired'), 'error');
     return;
   }
   
@@ -139,7 +142,7 @@ passwordInput.addEventListener('keypress', (e) => {
 async function handleLogin(username, password) {
   try {
     loginBtn.disabled = true;
-    showStatus(loginStatus, chrome.i18n.getMessage('loggingIn'), 'loading');
+    showStatus(loginStatus, chromeAPI.i18n.getMessage('loggingIn'), 'loading');
     
     // 调用登录API
     const response = await fetch(`${API_BASE_URL}/api/auth`, {
@@ -151,7 +154,7 @@ async function handleLogin(username, password) {
     });
     
     if (!response.ok) {
-      throw new Error(chrome.i18n.getMessage('loginFailed'));
+      throw new Error(chromeAPI.i18n.getMessage('loginFailed'));
     }
     
     const data = await response.json();
@@ -166,12 +169,12 @@ async function handleLogin(username, password) {
       };
       
       // 保存登录信息
-      await chrome.storage.local.set({
+      await chromeAPI.storage.local.set({
         apiToken: apiToken,
         userInfo: currentUser,
       });
       
-      showStatus(loginStatus, chrome.i18n.getMessage('loginSuccess'), 'success');
+      showStatus(loginStatus, chromeAPI.i18n.getMessage('loginSuccess'), 'success');
       
       // 延迟显示主界面
       setTimeout(() => {
@@ -182,11 +185,11 @@ async function handleLogin(username, password) {
         loginStatus.className = 'status-message';
       }, 1000);
     } else {
-      throw new Error(data.message || chrome.i18n.getMessage('loginFailed'));
+      throw new Error(data.message || chromeAPI.i18n.getMessage('loginFailed'));
     }
   } catch (error) {
     console.error('登录错误:', error);
-    showStatus(loginStatus, error.message || chrome.i18n.getMessage('loginFailed'), 'error');
+    showStatus(loginStatus, error.message || chromeAPI.i18n.getMessage('loginFailed'), 'error');
   } finally {
     loginBtn.disabled = false;
   }
@@ -195,7 +198,7 @@ async function handleLogin(username, password) {
 // 更新书签数量
 async function updateBookmarkCount() {
   try {
-    const bookmarks = await chrome.bookmarks.getTree();
+    const bookmarks = await chromeAPI.bookmarks.getTree();
     const count = countBookmarks(bookmarks);
     bookmarkCount.textContent = count;
   } catch (error) {
@@ -223,10 +226,10 @@ uploadBtn.addEventListener('click', async () => {
   try {
     uploadBtn.disabled = true;
     downloadBtn.disabled = true;
-    showStatus(syncStatus, chrome.i18n.getMessage('syncingToCloud'), 'loading');
+    showStatus(syncStatus, chromeAPI.i18n.getMessage('syncingToCloud'), 'loading');
     
     // 获取所有书签
-    const bookmarks = await chrome.bookmarks.getTree();
+    const bookmarks = await chromeAPI.bookmarks.getTree();
     // 只上传实际的书签内容，跳过根节点（id='0'）
     const bookmarkData = bookmarks[0] && bookmarks[0].children 
       ? serializeBookmarks(bookmarks[0].children)
@@ -247,28 +250,28 @@ uploadBtn.addEventListener('click', async () => {
     
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error(chrome.i18n.getMessage('tokenExpired'));
+        throw new Error(chromeAPI.i18n.getMessage('tokenExpired'));
       }
-      throw new Error(chrome.i18n.getMessage('syncFailed'));
+      throw new Error(chromeAPI.i18n.getMessage('syncFailed'));
     }
     
     const data = await response.json();
     
     if (data.success) {
       const count = countBookmarks(bookmarks);
-      showStatus(syncStatus, chrome.i18n.getMessage('syncSuccessWithCount', [count.toString()]), 'success');
+      showStatus(syncStatus, chromeAPI.i18n.getMessage('syncSuccessWithCount', [count.toString()]), 'success');
       setTimeout(() => {
         syncStatus.textContent = '';
         syncStatus.className = 'status-message';
       }, 3000);
     } else {
-      throw new Error(data.message || chrome.i18n.getMessage('syncFailed'));
+      throw new Error(data.message || chromeAPI.i18n.getMessage('syncFailed'));
     }
   } catch (error) {
     console.error('上传书签失败:', error);
-    showStatus(syncStatus, error.message || chrome.i18n.getMessage('syncFailed'), 'error');
+    showStatus(syncStatus, error.message || chromeAPI.i18n.getMessage('syncFailed'), 'error');
     
-    if (error.message.includes(chrome.i18n.getMessage('tokenExpired'))) {
+    if (error.message.includes(chromeAPI.i18n.getMessage('tokenExpired'))) {
       setTimeout(() => {
         handleLogout();
       }, 2000);
@@ -284,7 +287,7 @@ downloadBtn.addEventListener('click', async () => {
   try {
     downloadBtn.disabled = true;
     uploadBtn.disabled = true;
-    showStatus(syncStatus, chrome.i18n.getMessage('syncingFromCloud'), 'loading');
+    showStatus(syncStatus, chromeAPI.i18n.getMessage('syncingFromCloud'), 'loading');
     
     // 从服务器获取书签
     const response = await fetch(`${API_BASE_URL}/api/bookmark_download`, {
@@ -296,9 +299,9 @@ downloadBtn.addEventListener('click', async () => {
     
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error(chrome.i18n.getMessage('tokenExpired'));
+        throw new Error(chromeAPI.i18n.getMessage('tokenExpired'));
       }
-      throw new Error(chrome.i18n.getMessage('syncFailed'));
+      throw new Error(chromeAPI.i18n.getMessage('syncFailed'));
     }
     
     const data = await response.json();
@@ -312,7 +315,7 @@ downloadBtn.addEventListener('click', async () => {
       // data.bookmarks 应该是一个数组，包含这些主要文件夹
       await restoreBookmarksToRoot(data.bookmarks);
       
-      showStatus(syncStatus, chrome.i18n.getMessage('syncSuccess') + '！' + chrome.i18n.getMessage('bookmarksUpdated'), 'success');
+      showStatus(syncStatus, chromeAPI.i18n.getMessage('syncSuccess') + '！' + chromeAPI.i18n.getMessage('bookmarksUpdated'), 'success');
       await updateBookmarkCount();
       
       setTimeout(() => {
@@ -320,13 +323,13 @@ downloadBtn.addEventListener('click', async () => {
         syncStatus.className = 'status-message';
       }, 3000);
     } else {
-      throw new Error(data.message || chrome.i18n.getMessage('syncFailed'));
+      throw new Error(data.message || chromeAPI.i18n.getMessage('syncFailed'));
     }
   } catch (error) {
     console.error('下载书签失败:', error);
-    showStatus(syncStatus, error.message || chrome.i18n.getMessage('syncFailed'), 'error');
+    showStatus(syncStatus, error.message || chromeAPI.i18n.getMessage('syncFailed'), 'error');
     
-    if (error.message.includes(chrome.i18n.getMessage('tokenExpired'))) {
+    if (error.message.includes(chromeAPI.i18n.getMessage('tokenExpired'))) {
       setTimeout(() => {
         handleLogout();
       }, 2000);
@@ -360,58 +363,75 @@ function serializeBookmarks(nodes) {
   return result;
 }
 
-// 恢复书签到根目录（处理Chrome书签结构）
+// 恢复书签到根目录（处理 Chrome/Firefox 书签结构差异）
 async function restoreBookmarksToRoot(bookmarkData) {
-  // Chrome书签结构：
-  // bookmarkData 是一个数组，可能包含：
-  // - { id: '1', title: '书签栏', children: [...] }
-  // - { id: '2', title: '其他书签', children: [...] }
-  // - 或者直接是书签/文件夹的数组
+  // 检测浏览器类型
+  const isFirefox = typeof browser !== 'undefined' && browser.runtime;
   
-  // 获取Chrome书签的主要容器
-  const bookmarkBar = '1';      // 书签栏
-  const otherBookmarks = '2';   // 其他书签
+  // Chrome 书签结构：
+  // '0' - 根节点
+  // '1' - 书签栏 (Bookmarks Bar)
+  // '2' - 其他书签 (Other Bookmarks)
+  
+  // Firefox 书签结构：
+  // 'root________' - 根节点
+  // 'toolbar_____' - 书签工具栏
+  // 'menu________' - 书签菜单
+  // 'unfiled_____' - 未分类书签
+  
+  const bookmarkBar = isFirefox ? 'toolbar_____' : '1';
+  const otherBookmarks = isFirefox ? 'unfiled_____' : '2';
+  
+  console.log(`[书签恢复] 浏览器: ${isFirefox ? 'Firefox' : 'Chrome'}, 书签栏ID: ${bookmarkBar}`);
   
   for (const item of bookmarkData) {
     try {
-      // 判断这是否是Chrome的主文件夹（书签栏、其他书签等）
-      if (item.id === '1' || item.title === '书签栏' || item.title === 'Bookmarks Bar') {
-        // 这是书签栏的数据，恢复到书签栏
+      // 判断这是否是主文件夹
+      if (item.id === '1' || item.id === 'toolbar_____' || 
+          item.title === '书签栏' || item.title === 'Bookmarks Bar' || item.title === 'Bookmarks Toolbar') {
+        // 这是书签栏的数据
+        console.log('[书签恢复] 恢复书签栏数据...');
         if (item.children && item.children.length > 0) {
           await restoreBookmarks(item.children, bookmarkBar);
         }
-      } else if (item.id === '2' || item.title === '其他书签' || item.title === 'Other Bookmarks') {
-        // 这是其他书签的数据，恢复到其他书签
+      } else if (item.id === '2' || item.id === 'unfiled_____' || 
+                 item.title === '其他书签' || item.title === 'Other Bookmarks' || item.title === 'Other Bookmarks') {
+        // 这是其他书签的数据
+        console.log('[书签恢复] 恢复其他书签数据...');
         if (item.children && item.children.length > 0) {
           await restoreBookmarks(item.children, otherBookmarks);
         }
       } else {
         // 这是普通的书签或文件夹，默认恢复到书签栏
-        // 注意：这里不应该创建新的根文件夹
+        console.log(`[书签恢复] 恢复单个项目: ${item.title}`);
         if (item.url) {
           // 这是一个书签，检查书签栏中是否已存在
-          const existingChildren = await chrome.bookmarks.getChildren(bookmarkBar);
+          const existingChildren = await chromeAPI.bookmarks.getChildren(bookmarkBar);
           const exists = existingChildren.find(
             child => child.url && normalizeUrl(child.url) === normalizeUrl(item.url)
           );
           
           if (!exists) {
-            await chrome.bookmarks.create({
+            await chromeAPI.bookmarks.create({
               parentId: bookmarkBar,
               title: item.title,
               url: item.url,
             });
+            console.log(`[书签恢复] 创建书签: ${item.title}`);
+          } else {
+            console.log(`[书签恢复] 书签已存在: ${item.title}`);
           }
         } else if (item.children) {
           // 这是一个文件夹
-          const existingChildren = await chrome.bookmarks.getChildren(bookmarkBar);
+          const existingChildren = await chromeAPI.bookmarks.getChildren(bookmarkBar);
           let folder = existingChildren.find(child => !child.url && child.title === item.title);
           
           if (!folder) {
-            folder = await chrome.bookmarks.create({
+            folder = await chromeAPI.bookmarks.create({
               parentId: bookmarkBar,
               title: item.title,
             });
+            console.log(`[书签恢复] 创建文件夹: ${item.title}`);
           }
           
           // 递归恢复子项
@@ -419,7 +439,7 @@ async function restoreBookmarksToRoot(bookmarkData) {
         }
       }
     } catch (error) {
-      console.error('恢复书签项失败:', item, error);
+      console.error('[书签恢复] 恢复书签项失败:', item, error);
     }
   }
 }
@@ -495,7 +515,7 @@ function normalizeUrl(url) {
 // 恢复书签（智能合并模式）
 async function restoreBookmarks(bookmarkData, parentId = '1') {
   // 获取当前父节点下的所有子节点
-  const existingChildren = await chrome.bookmarks.getChildren(parentId);
+  const existingChildren = await chromeAPI.bookmarks.getChildren(parentId);
   
   for (const item of bookmarkData) {
     try {
@@ -507,7 +527,7 @@ async function restoreBookmarks(bookmarkData, parentId = '1') {
         
         if (!exists) {
           // 书签不存在，创建新书签
-          await chrome.bookmarks.create({
+          await chromeAPI.bookmarks.create({
             parentId: parentId,
             title: item.title,
             url: item.url,
@@ -515,7 +535,7 @@ async function restoreBookmarks(bookmarkData, parentId = '1') {
         } else {
           // 书签已存在，更新标题（如果不同）
           if (exists.title !== item.title) {
-            await chrome.bookmarks.update(exists.id, {
+            await chromeAPI.bookmarks.update(exists.id, {
               title: item.title,
             });
           }
@@ -526,7 +546,7 @@ async function restoreBookmarks(bookmarkData, parentId = '1') {
         
         if (!folder) {
           // 文件夹不存在，创建新文件夹
-          folder = await chrome.bookmarks.create({
+          folder = await chromeAPI.bookmarks.create({
             parentId: parentId,
             title: item.title,
           });
@@ -543,14 +563,14 @@ async function restoreBookmarks(bookmarkData, parentId = '1') {
 
 // 退出登录
 logoutBtn.addEventListener('click', () => {
-  if (confirm(chrome.i18n.getMessage('logoutConfirm'))) {
+  if (confirm(chromeAPI.i18n.getMessage('logoutConfirm'))) {
     handleLogout();
   }
 });
 
 async function handleLogout() {
   try {
-    await chrome.storage.local.remove(['apiToken', 'userInfo']);
+    await chromeAPI.storage.local.remove(['apiToken', 'userInfo']);
     apiToken = null;
     currentUser = null;
     showLoginView();

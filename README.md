@@ -2,13 +2,22 @@
 
 [English](README-en.md) | [中文](README.md)
 
-一个专为X浏览器设计的Chrome扩展程序，可以运行在任何支持Chrome扩展的浏览器上，支持本地书签与云端的双向同步。
+一个专为X浏览器设计的 Chrome/Firefox 扩展程序，可以运行在任何支持 Chrome/Firefox 扩展的浏览器上，支持本地书签与云端的双向同步。
 
 ## 功能特性
 
 极简设计，只提供最基本的书签同步功能，登录X浏览器账户后即可使用。如果你有多个PC浏览器也可以使用X浏览器的账户在多个PC浏览器设备上同步书签。
 
 ![alt text](assets/images/chrome-with-xbrowser-bookmark-sync.png)
+
+## 浏览器兼容性
+
+✅ **Chrome** 88+  
+✅ **Firefox** 109+  
+✅ **Microsoft Edge** 88+  
+✅ **其他基于 Chromium 的浏览器**
+
+> 🦊 **Firefox 用户**: 请查看 [Firefox 构建指南](FIREFOX_BUILD.md) 了解安装说明。
 
 ## 安装说明
 
@@ -40,6 +49,8 @@
 
 ### 开发模式安装
 
+#### Chrome/Edge 浏览器：
+
 1. 下载本项目项目到本地
 
 ```bash
@@ -59,11 +70,26 @@
 
 6. 扩展程序安装完成，点击工具栏图标即可使用
 
+#### Firefox 浏览器：
+
+```bash
+# 构建 Firefox 版本
+./build-firefox.sh
+```
+
+然后在 Firefox 中：
+1. 在地址栏输入 `about:debugging#/runtime/this-firefox`
+2. 点击"临时载入附加组件"
+3. 选择项目目录下的 `manifest.json` 文件
+
+📖 详细的 Firefox 安装说明请查看 [Firefox 构建指南](FIREFOX_BUILD.md)
+
 
 ## 技术栈
 
-- Manifest V3
-- Chrome Extension APIs
+- Manifest V3 (Chrome) / V2 (Firefox)
+- Chrome/Firefox Extension APIs
+- Cross-browser Compatibility Layer
 - Chrome Bookmarks API
 - Chrome Storage API
 - Vanilla JavaScript
@@ -71,17 +97,26 @@
 
 ## 文件结构
 ```
-├── manifest.json          # 扩展程序配置文件
-├── popup.html             # 弹窗页面
-├── popup.js               # 主要逻辑
-├── background.js          # 后台服务
-├── styles.css             # 样式文件
-├── icons/                 # 图标文件夹
+├── manifest.json              # Chrome 扩展配置文件 (Manifest V3)
+├── manifest.firefox.json      # Firefox 扩展配置文件 (Manifest V2)
+├── browser-polyfill.js        # 浏览器兼容性适配层
+├── config.js                  # 环境配置
+├── popup.html                 # 弹窗页面
+├── popup.js                   # 主要逻辑
+├── background.js              # 后台服务
+├── styles.css                 # 样式文件
+├── build-firefox.sh           # Firefox 构建脚本
+├── build-chrome.sh            # Chrome 构建脚本
+├── icons/                     # 图标文件夹
 │   ├── icon16.png
 │   ├── icon48.png
 │   ├── icon128.png
 │   └── default-avatar.png
-└── README.md              # 说明文档
+├── _locales/                  # 多语言支持
+│   ├── zh_CN/
+│   ├── en/
+│   └── en_US/
+└── README.md                  # 说明文档
 ```
 
 ## 权限说明

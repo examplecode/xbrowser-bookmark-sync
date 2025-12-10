@@ -36,6 +36,9 @@ const ENV = {
  * @returns {string} API服务器地址
  */
 function getApiBaseUrl() {
+  // 使用兼容性 API
+  const chromeAPI = typeof browserAPI !== 'undefined' ? browserAPI : (typeof browser !== 'undefined' ? browser : chrome);
+  
   // 开发环境：使用本地测试服务器
   if (ENV.isDevelopment) {
     console.log('[环境] 开发模式 - API地址:', ENV.development.apiUrl);
@@ -43,7 +46,7 @@ function getApiBaseUrl() {
   }
   
   // 生产环境：根据浏览器语言选择API服务器
-  const browserLanguage = chrome.i18n.getUILanguage(); // 例如: "zh-CN", "en-US", "ja"
+  const browserLanguage = chromeAPI.i18n.getUILanguage(); // 例如: "zh-CN", "en-US", "ja"
   console.log('[环境] 生产模式 - 浏览器语言:', browserLanguage);
   
   // 提取主语言代码（zh-CN -> zh）
@@ -74,10 +77,12 @@ function getApiBaseUrl() {
  * @returns {object} 环境信息
  */
 function getEnvironmentInfo() {
+  const chromeAPI = typeof browserAPI !== 'undefined' ? browserAPI : (typeof browser !== 'undefined' ? browser : chrome);
+  
   return {
     isDevelopment: ENV.isDevelopment,
-    language: chrome.i18n.getUILanguage(),
+    language: chromeAPI.i18n.getUILanguage(),
     apiUrl: getApiBaseUrl(),
-    version: chrome.runtime.getManifest().version
+    version: chromeAPI.runtime.getManifest().version
   };
 }

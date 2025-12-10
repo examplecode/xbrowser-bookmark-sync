@@ -2,13 +2,22 @@
 
 [English](README-en.md) | [中文](README.md)
 
-A Chrome extension designed for XBrowser that runs on any browser supporting Chrome extensions, enabling two-way synchronization between local bookmarks and the cloud.
+A Chrome/Firefox extension designed for XBrowser that runs on any browser supporting Chrome/Firefox extensions, enabling two-way synchronization between local bookmarks and the cloud.
 
 ## Features
 
 Minimalist design, providing only essential bookmark sync functionality. Simply log in with your XBrowser account to start using it. If you have multiple PC browsers, you can also use your XBrowser account to sync bookmarks across multiple PC browser devices.
 
 ![alt text](assets/images/chrome-with-xbrowser-bookmark-sync.png)
+
+## Browser Compatibility
+
+✅ **Chrome** 88+  
+✅ **Firefox** 109+  
+✅ **Microsoft Edge** 88+  
+✅ **Other Chromium-based browsers**
+
+> 🦊 **Firefox Users**: See [Firefox Build Guide](FIREFOX_BUILD.md) for installation instructions.
 
 ## Installation
 
@@ -34,6 +43,8 @@ Minimalist design, providing only essential bookmark sync functionality. Simply 
 
 ### Developer Mode Installation
 
+#### For Chrome/Edge:
+
 1. Download this project to your local machine
 
 ```bash
@@ -52,6 +63,20 @@ Or download the zip file [xbrowser-bookmark-sync.zip](https://www.xbext.com/down
 5. Select the folder containing this project
 
 6. Extension installation complete - click the toolbar icon to use
+
+#### For Firefox:
+
+```bash
+# Build Firefox version
+./build-firefox.sh
+```
+
+Then open Firefox:
+1. Enter `about:debugging#/runtime/this-firefox` in the address bar
+2. Click "Load Temporary Add-on"
+3. Select the `manifest.json` file in the project directory
+
+📖 For detailed Firefox instructions, see [Firefox Build Guide](FIREFOX_BUILD.md)
 
 ## Tech Stack
 
