@@ -27,7 +27,9 @@ Minimalist design, providing only essential bookmark sync functionality. Simply 
 
 - Microsoft Edge Add-ons: https://microsoftedge.microsoft.com/addons/detail/xbrowser-bookmark-sync/gdbkdcohpokcfaheiojfamnmfoniaeca
 
-> If you find this extension useful, please leave a positive review. Thanks in advance! :)
+
+- Firefox Add-ons： https://addons.mozilla.org/en-US/firefox/addon/xbrowser-bookmark-sync/
+
 
 ### Install from CRX File
 
@@ -66,12 +68,25 @@ Or download the zip file [xbrowser-bookmark-sync.zip](https://www.xbext.com/down
 
 #### For Firefox:
 
+##### Install from ZIP Package
+
+Download the package [xbrowser-bookmark-sync-firefox.zip](https://www.xbext.com/download/xbrowser-bookmark-sync-firefox.zip)
+
+Then in Firefox:
+1. Enter `about:debugging#/runtime/this-firefox` in the address bar
+2. Click "Load Temporary Add-on"
+3. Select the downloaded `xbrowser-bookmark-sync-firefox.zip` file
+
+##### Install from Source
+
 ```bash
+git clone https://github.com/examplecode/xbrowser-bookmark-sync.git
+cd /path/of/xbrowser-bookmark-sync
 # Build Firefox version
 ./build-firefox.sh
 ```
 
-Then open Firefox:
+Then in Firefox:
 1. Enter `about:debugging#/runtime/this-firefox` in the address bar
 2. Click "Load Temporary Add-on"
 3. Select the `manifest.json` file in the project directory

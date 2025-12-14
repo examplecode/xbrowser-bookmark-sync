@@ -28,9 +28,7 @@
 
 - Edge浏览器扩展商店安装地址：https://microsoftedge.microsoft.com/addons/detail/xbrowser-bookmark-sync/gdbkdcohpokcfaheiojfamnmfoniaeca
 
-
-> 觉得这个扩展对你有用的话，请顺便给个好评，先谢了 ：）
-
+- FireFox扩展商店安装地址： https://addons.mozilla.org/en-US/firefox/addon/xbrowser-bookmark-sync/
    
 
 
@@ -72,9 +70,23 @@
 
 #### Firefox 浏览器：
 
+##### 从zip包安装
+
+下载压缩包 [xbrowser-bookmark-sync-firefox.zip](https://www.xbext.com/download/xbrowser-bookmark-sync-firefox.zip) 
+
+
+然后在 Firefox 中：
+1. 在地址栏输入 `about:debugging#/runtime/this-firefox`
+2. 点击"临时载入附加组件"
+3. 选择刚刚下载的 `xbrowser-bookmark-sync-firefox.zip` 文件
+
+#####  从源码安装
 ```bash
-# 构建 Firefox 版本
-./build-firefox.sh
+
+  git clone https://github.com/examplecode/xbrowser-bookmark-sync.git
+  cd /path/of/xbrowser-bookmark-sync
+  # 构建 Firefox 版本
+   ./build-firefox.sh
 ```
 
 然后在 Firefox 中：
