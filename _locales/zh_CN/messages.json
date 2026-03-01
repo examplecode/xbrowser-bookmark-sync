@@ -41,6 +41,9 @@
   "syncFromCloud": {
     "message": "从云端同步"
   },
+  "overwriteCloud": {
+    "message": "使用本地书签覆盖云端"
+  },
   "logout": {
     "message": "退出登录"
   },

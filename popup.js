@@ -245,6 +245,7 @@ uploadBtn.addEventListener('click', async () => {
       body: JSON.stringify({
         bookmarks: bookmarkData,
         timestamp: Date.now(),
+        overwrite: document.getElementById('overwriteCloud').checked,
       }),
     });
     

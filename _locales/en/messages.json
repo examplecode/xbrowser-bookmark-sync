@@ -41,6 +41,9 @@
   "syncFromCloud": {
     "message": "Sync from Cloud"
   },
+  "overwriteCloud": {
+    "message": "Overwrite cloud with local bookmarks"
+  },
   "logout": {
     "message": "Logout"
   },

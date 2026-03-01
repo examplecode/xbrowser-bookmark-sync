@@ -224,6 +224,34 @@ body {
   transform: none;
 }
 
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #888;
+  cursor: pointer;
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.checkbox-option:hover {
+  background: #f5f5f5;
+}
+
+.checkbox-option input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1a1a1a;
+  cursor: pointer;
+}
+
+.checkbox-option span {
+  user-select: none;
+}
+
 /* 状态消息 */
 .status-message {
   text-align: center;
