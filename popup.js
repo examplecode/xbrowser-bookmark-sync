@@ -366,24 +366,29 @@ function serializeBookmarks(nodes) {
 
 // 恢复书签到根目录（处理 Chrome/Firefox 书签结构差异）
 async function restoreBookmarksToRoot(bookmarkData) {
-  // 检测浏览器类型
-  const isFirefox = typeof browser !== 'undefined' && browser.runtime;
+  // 动态获取书签栏和其他书签的真实ID，避免硬编码
+  const tree = await chromeAPI.bookmarks.getTree();
+  const rootChildren = tree[0].children || [];
   
-  // Chrome 书签结构：
-  // '0' - 根节点
-  // '1' - 书签栏 (Bookmarks Bar)
-  // '2' - 其他书签 (Other Bookmarks)
+  // 通过位置和标题匹配书签栏和其他书签
+  // Chrome: 第一个子节点是书签栏，第二个是其他书签
+  // Firefox: 通过已知ID匹配
+  let bookmarkBar = null;
+  let otherBookmarks = null;
   
-  // Firefox 书签结构：
-  // 'root________' - 根节点
-  // 'toolbar_____' - 书签工具栏
-  // 'menu________' - 书签菜单
-  // 'unfiled_____' - 未分类书签
+  for (const node of rootChildren) {
+    if (node.id === 'toolbar_____' || node.title === 'Bookmarks Bar' || node.title === 'Bookmarks bar' || node.title === '书签栏') {
+      bookmarkBar = node.id;
+    } else if (node.id === 'unfiled_____' || node.title === 'Other Bookmarks' || node.title === 'Other bookmarks' || node.title === '其他书签') {
+      otherBookmarks = node.id;
+    }
+  }
   
-  const bookmarkBar = isFirefox ? 'toolbar_____' : '1';
-  const otherBookmarks = isFirefox ? 'unfiled_____' : '2';
+  // 回退：如果没找到，使用根节点的前两个子节点
+  if (!bookmarkBar && rootChildren.length > 0) bookmarkBar = rootChildren[0].id;
+  if (!otherBookmarks && rootChildren.length > 1) otherBookmarks = rootChildren[1].id;
   
-  console.log(`[书签恢复] 浏览器: ${isFirefox ? 'Firefox' : 'Chrome'}, 书签栏ID: ${bookmarkBar}`);
+  console.log(`[书签恢复] 书签栏ID: ${bookmarkBar}, 其他书签ID: ${otherBookmarks}`);
   
   for (const item of bookmarkData) {
     try {
@@ -514,7 +519,7 @@ function normalizeUrl(url) {
 }
 
 // 恢复书签（智能合并模式）
-async function restoreBookmarks(bookmarkData, parentId = '1') {
+async function restoreBookmarks(bookmarkData, parentId) {
   // 获取当前父节点下的所有子节点
   const existingChildren = await chromeAPI.bookmarks.getChildren(parentId);
   
@@ -558,6 +563,7 @@ async function restoreBookmarks(bookmarkData, parentId = '1') {
       }
     } catch (error) {
       console.error('恢复书签项失败:', item, error);
+      console.log('书签URL:', item.url);
     }
   }
 }
